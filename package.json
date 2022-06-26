@@ -6,8 +6,13 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index",
-    "test": "jest --watchAll --detectOpenHandles"
+    "test": "jest --watchAll --detectOpenHandles "
   },
+  
+  "jest": {
+    "testEnvironment": "node"
+  },
+
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Naruto2020/mini-API.git"

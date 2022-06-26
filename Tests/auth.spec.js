@@ -2,11 +2,12 @@
 const request = require("supertest");
 const app = require("../app");
 const {User} = require("../Models/user");
+
 const newUser = {
-    lastName : "evra",
+    lastName : "evra-Unit-Test",
     firstName : "patrice",
-    email: "evra2020@test.com",
-    password : "patrice2020",
+    email: "evra2022@test.com",
+    password : "patrice2022",
     adress: "place des lices",
     niveau : "user"
 }
@@ -18,7 +19,7 @@ beforeEach( async()=>{
         {lastName : "henry"}
     );
     await User.findOneAndDelete(
-        {lastName : "evra"}
+        {lastName : "evra-Unit-Test"}
     );
     await User(newUser).save();
 });
@@ -34,7 +35,7 @@ describe("Post /user", ()=>{
             firstName : "thiery",
             adress: "bvd clémenceau",
             email : "titi01@test.com",
-            password : "test2020",
+            password : "test2022",
             niveau : "user"
           })
           .expect(200);
