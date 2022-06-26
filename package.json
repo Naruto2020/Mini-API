@@ -1,0 +1,39 @@
+{
+  "name": "mini-api",
+  "version": "1.0.0",
+  "description": "API pour site de vente de figurines",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index",
+    "test": "jest --watchAll"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Naruto2020/mini-API.git"
+  },
+  "author": "Steve Kounga",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Naruto2020/mini-API/issues"
+  },
+  "homepage": "https://github.com/Naruto2020/mini-API#readme",
+  "dependencies": {
+    "async": "^3.2.4",
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.20.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "jest": "^28.1.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.4.0",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.7.5",
+    "nodemon": "^2.0.18",
+    "path": "^0.12.7",
+    "supertest": "^6.2.3"
+  }
+}
