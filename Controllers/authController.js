@@ -2,7 +2,8 @@
 const {User} = require("../Models/user");
 const jwt = require("jsonwebtoken");
 
-
+// import du fichier Errors du module Utils
+const {signUpErrors, signInErrors} = require("../Utils/errorUtils");
 
 // initialisation de la durée du token 
 const maxlife = 3 * 24 * 60 * 60 * 1000; // en milisecondeequivaut à 03 jours 
@@ -23,7 +24,8 @@ module.exports.signUp = async (req, res)=>{
         res.status(200).json({newUser:newUser._id});
     }catch(err){
      
-        res.status(400).send(err);
+        const errors = signUpErrors(err);
+        res.status(201).send({errors});
     }
 }
 
@@ -38,7 +40,8 @@ module.exports.signIn = async (req, res) =>{
         res.cookie('jwt', token, {httpOnly: true, sameSite:true, maxlife});
         res.status(200).json({ user: user._id, niveau:user.niveau});
     }catch(err){
-        res.status(400).send(err);
+        const errors = signInErrors(err);
+        res.status(201).json({errors});
     }
 
 }
