@@ -3,7 +3,7 @@ const express = require("express");
 const path = require('path');
 const userRoutes = require("./Routes/userRoute");
 //const orderRoutes = require("./Routes/orderRoute");
-const Auth0 = require("./middleware/authMiddleware");
+const Auth0 = require("./Middleware/authMiddleware");
 
 
 const cors = require("cors");

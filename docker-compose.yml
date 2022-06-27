@@ -1,0 +1,20 @@
+version : "3.7" # spécifie la version du docker compose utiliser 
+
+services:  # definir les services/container à exécuter
+
+  server: #2eme service
+   
+    # build: workshop-server # spécifie le repertoire du backend
+    image: ksteve2021/mini-api:v1.0 #image à partir de laquelle on construit le container
+
+    env_file: Config/.env
+    
+    ports:
+      - "5000:5000"
+    links:
+      - database #liée express à la BDD  
+  database: #3eme service
+    image: mongo #image à partir de laquelle on construit le container
+   
+    ports:
+      - "27017:27017"
