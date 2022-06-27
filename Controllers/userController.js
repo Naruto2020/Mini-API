@@ -10,8 +10,14 @@ const bcrypt = require('bcrypt');
 // display all users without pasword
 module.exports.getAllUsers = async (req, res)=>{
 
-    const users = await User.find().select("-password");
-    res.status(200).json(users);
+    //console.log("check-it",res.locals.user.niveau);
+    if(res.locals.user.niveau === "user"){
+        res.status(401).json({error: 'Invalid request! user dont have all rigths'});
+    }else{
+        const users = await User.find().select("-password");
+        res.status(200).json(users);
+
+    }
 
 };
 
@@ -19,39 +25,53 @@ module.exports.getAllUsers = async (req, res)=>{
 
 // display user by Id 
 module.exports.getUserId =  (req, res)=>{
+
+    if(res.locals.user.niveau === "user"){
+        res.status(401).json({error: 'Invalid request! user dont have all rigths'});
+    }else{
+
+        // verrification de la validité de l'ID
+        if(!ObjetId.isValid(req.params.id))
+            return res.status(400).send(`Id incorrecte ${req.params.id}`);
+        
+        User.findById(req.params.id, (err, docs)=>{
+            if(!err){
+                return res.send(docs);
+            }else{
+                console.log("erreur de transmission du comptes utilisateur:" + JSON.stringify(err, undefined, 2));
+            }
+        }).select("-password");
+
+    }
     
-    // verrification de la validité de l'ID
-    if(!ObjetId.isValid(req.params.id))
-        return res.status(400).send(`Id incorrecte ${req.params.id}`);
-    
-    User.findById(req.params.id, (err, docs)=>{
-        if(!err){
-            return res.send(docs);
-        }else{
-            console.log("erreur de transmission du comptes utilisateur:" + JSON.stringify(err, undefined, 2));
-        }
-    }).select("-password");
 
 
 };
 
 // display user by name 
 module.exports.getUserName = async (req, res) =>{
-    
-    try{
-        await User.findOne(
-            {nom :req.params.nom},
-            (err, user)=>{
-                if(!user){
-                    return res.json({message : "Couldn't find a user by that name"});
-                }else{
-                    res.status(200).json(user);
+
+    if(res.locals.user.niveau === "user"){
+        res.status(401).json({error: 'Invalid request! user dont have all rigths'});
+
+    }else{
+        try{
+            await User.findOne(
+                {nom :req.params.nom},
+                (err, user)=>{
+                    if(!user){
+                        return res.json({message : "Couldn't find a user by that name"});
+                    }else{
+                        res.status(200).json(user);
+                    }
                 }
-            }
-        );
-    }catch(err){
-        res.status(400).send(err);
+            );
+        }catch(err){
+            res.status(400).send(err);
+        }
+
     }
+    
 
 };
 

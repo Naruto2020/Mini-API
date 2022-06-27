@@ -3,6 +3,7 @@ const express = require("express");
 const path = require('path');
 const userRoutes = require("./Routes/userRoute");
 //const orderRoutes = require("./Routes/orderRoute");
+const Auth0 = require("./middleware/authMiddleware");
 
 
 const cors = require("cors");
@@ -40,6 +41,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended:true }));
 
 
+// securité auth jwt 
+app.get("/authUser", Auth0.requireAuth); // on verrifie le jetton de connexion 
+app.get("/jwtid", Auth0.checkUser, (req, res) =>{ // on récuppère les infos de l'ut connecté 
+    res.status(200).send(res.locals.token);
+}); 
 
 // routes 
 app.use("/api/user", userRoutes);

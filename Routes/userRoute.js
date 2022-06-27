@@ -6,6 +6,7 @@ const router = express.Router();
 const authController = require("../Controllers/authController");
 const userController = require("../Controllers/userController");
 const uploadController = require("../Controllers/uploadController");
+const auth = require("../Middleware/authMiddleware");
 
 
 // multer for upload img 
@@ -53,16 +54,16 @@ router.get("/logout", authController.logout);
 
 
 //diqplay user 
-router.get("/", userController.getAllUsers);
-router.get("/find/:id", userController.getUserId);
-router.get("/find/:nom", userController.getUserName);
+router.get("/", auth.requireAuth , auth.checkUser, userController.getAllUsers);
+router.get("/find/:id", auth.requireAuth , auth.checkUser, userController.getUserId);
+router.get("/find/:nom", auth.requireAuth , auth.checkUser, userController.getUserName);
 
 // update and delete
-router.put("/:id", userController.editUser);
-router.delete("/:id", userController.deleteUser);
+router.put("/:id", auth.requireAuth , userController.editUser);
+router.delete("/:id", auth.requireAuth , userController.deleteUser);
 
 // upload image
-router.post("/upload", upload.single("photo") , uploadController.profilPhoto );
+router.post("/upload", upload.single("photo") , auth.requireAuth , uploadController.profilPhoto );
 
 
 
