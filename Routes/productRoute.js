@@ -3,10 +3,9 @@ const express = require("express");
 const router = express.Router();
 
 // import controllers 
-const authController = require("../Controllers/authController");
-const userController = require("../Controllers/userController");
+const productController = require("../Controllers/productController");
 const uploadController = require("../Controllers/uploadController");
-const orderController = require("../Controllers/orderController");
+
 const auth = require("../Middleware/authMiddleware");
 
 
@@ -17,7 +16,7 @@ const storage = multer.diskStorage({
     destination: function(req, file, cb){
        
         //cb(null, 'roadTrip/src/assets/uploads/profiles');
-        cb(null, 'client/uploads/profiles');
+        cb(null, 'client/uploads/products');
     },
 
     filename: function(req, file, cb){
@@ -47,25 +46,21 @@ const upload = multer({
 
 
 
-// create user and Auth 
-router.post("/register", authController.signUp);
-router.post("/login", authController.signIn);
-router.get("/logout", authController.logout);
+// create products
+router.post("/addProducts", auth.requireAuth , auth.checkUser, productController.createProduct);
 
+// get order
+router.get("/", auth.requireAuth , auth.checkUser, productController.getAllProducts);
+router.get("/find/:id", auth.requireAuth , auth.checkUser, productController.getProdutId);
 
-
-
-//diqplay user 
-router.get("/", auth.requireAuth , auth.checkUser, userController.getAllUsers);
-router.get("/find/:id", auth.requireAuth , auth.checkUser, userController.getUserId);
-router.get("/find/:nom", auth.requireAuth , auth.checkUser, userController.getUserName);
 
 // update and delete
-router.put("/:id", auth.requireAuth , userController.editUser);
-router.delete("/:id", auth.requireAuth , userController.deleteUser);
+router.put("/:id", auth.requireAuth ,productController.editProduct);
+router.delete("/:id", auth.requireAuth , productController.deleteProduct);
+
 
 // upload image
-router.post("/upload", upload.single("photo") , auth.requireAuth , uploadController.profilPhoto );
+//router.post("/upload", upload.single("img") , auth.requireAuth , uploadController.profilPhoto );
 
 
 
