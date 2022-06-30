@@ -51,10 +51,10 @@ module.exports.getOrderId =  (req, res)=>{
     }else{
 
         // verrification de la validité de l'ID
-        if(!ObjetId.isValid(req.params.orderId))
-            return res.status(400).send(`Id incorrecte ${req.params.orderId}`);
+        if(!ObjetId.isValid(req.params.id))
+            return res.status(400).send(`Id incorrecte ${req.params.id}`);
         
-        Order.findById(req.params.orderId, (err, docs)=>{
+        Order.findById(req.params.id, (err, docs)=>{
             if(!err){
                 return res.send(docs);
             }else{
@@ -72,12 +72,13 @@ module.exports.getOrderId =  (req, res)=>{
 
 module.exports.miniProduct = async (req, res) =>{
 
-    if(!ObjetId.isValid(req.params.orderId))
-    return res.status(400).send(`Id incorrecte ${req.params.orderId}`);
+    if(!ObjetId.isValid(req.params.id))
+    return res.status(400).send(`Id incorrecte ${req.params.id}`);
 
     try{
         Order.findByIdAndUpdate(
-            req.params.orderId,
+            // order id 
+            req.params.id,
             {
                         
                         
@@ -110,11 +111,12 @@ module.exports.miniProduct = async (req, res) =>{
 module.exports.editOrder = async (req, res) =>{
     
     // verrification de la validité de l'ID
-    if(!ObjetId.isValid(req.params.orderId))
-        return res.status(400).send(`Id incorrecte ${req.params.orderId}`);
+    if(!ObjetId.isValid(req.params.id))
+        return res.status(400).send(`Id incorrecte ${req.params.id}`);
 
     let newOrder =  { 
-        adress : req.body.adress, 
+        address : req.body.address, 
+        products: req.body.products,
         amount : req.body.amount,
         status : req.body.status,
         serialNum : req.body.serialNum
@@ -122,7 +124,7 @@ module.exports.editOrder = async (req, res) =>{
     
     try{
         Order.findByIdAndUpdate(
-            req.params.orderId,
+            req.params.id,
             {$set : newOrder},
             {new:true, upsert: true, setDefaultsOnInsert: true},
             (err, docs) =>{
@@ -145,11 +147,11 @@ module.exports.editOrder = async (req, res) =>{
 // delete order 
 module.exports.deleteOrder = async(req, res) =>{
     
-    if (!ObjetId.isValid(req.params.orderId))
-        return res.status(400).send(`id incorrecte ${req.params.orderId}`);
+    if (!ObjetId.isValid(req.params.id))
+        return res.status(400).send(`id incorrecte ${req.params.id}`);
     try{
         Order.findByIdAndDelete(
-            req.params.orderId,
+            req.params.id,
             (err, docs) =>{
                 if(!err){
                     return res.send(docs);

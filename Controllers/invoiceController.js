@@ -14,17 +14,19 @@ const ObjetId = require("mongoose").Types.ObjectId;
 module.exports.invoice = async (req, res) =>{
     
     // verrification de la validité de l'ID
-    if(!ObjetId.isValid(req.params.OrderId))
-        return res.status(400).send(`Id incorrecte ${req.params.OrderId}`);
+    if(!ObjetId.isValid(req.params.id))
+        return res.status(400).send(`Id incorrecte ${req.params.id}`);
 
+        let countMiniFamPack = 0;
+        let allQty = 0;
+        let promoMini = 0;
 
-    let countMiniFamPack = 0;
-    let allQty = 0;
-    
-    try{
+        
+        try{
 
-        await Order.findById(
-            req.params.OrderId,
+        Order.findById(
+            // id order en parametre
+            req.params.id,
             (err, order) =>{
                 if(!err){
                     let orderProd = order.products;
@@ -39,30 +41,37 @@ module.exports.invoice = async (req, res) =>{
                             {_id : orderProdId},
                             (err, product) =>{
                                 if(!err){
-                                    
-                                    order.amount += product.price ;
 
                                     if(product.title === "MiNi Familly pack"){
 
+                                        const OrderId = order._id;
                                         const isFamillyPack = true;
                                         const isMoreThanfifty = false;
                                         const promo = 20 // 20% on amount
 
                                         try{
 
-                                            const newDiscount =  Discount.create({isFamillyPack, isMoreThanfifty, promo });
+                                            const newDiscount =  Discount.create({OrderId, isFamillyPack, isMoreThanfifty, promo });
                                     
                                             // enregistrement du profil 
-                                            res.status(200).json({newDiscount:newDiscount._id});
+                                            newDiscount.then(function(result){
+                                                console.log("wherre !!!! : ", result);
+                                                res.status(200).json({discount : result.promo})
+
+                                            });
                                         }catch(err){
                                          
                                             
                                             res.status(400).send(err);
                                         }
 
-                                        let promo1 = order.amount - (order.amount * 20/100);
-                                        countMiniFamPack += 1;
-                                        order.amount = order.amount - promo1;
+                                        let promo1 =  (order.amount * 20/100);
+                                        order.amount = order.amount - promo1
+                                       
+                                       countMiniFamPack += 1;
+                                        //order.amount = order.amount - promo1;
+                                       
+                                       
                                     }
 
                                     if( allQty - countMiniFamPack > 50){
@@ -75,21 +84,28 @@ module.exports.invoice = async (req, res) =>{
 
                                             const newDiscount =  Discount.create({isFamillyPack, isMoreThanfifty, promo });
                                     
-                                            // enregistrement du profil 
-                                            res.status(200).json({newDiscount:newDiscount._id});
+                                            // enregistrement de la promo 
+                                            newDiscount.then(function(result){
+                                                console.log("wherre !!!! : ", result);
+                                                res.status(200).json({discount : result.promo})
+
+                                            });
                                         }catch(err){
                                          
                                             
                                             res.status(400).send(err);
                                         }
 
-
+                                        promoMini += 1
 
                                         let promo2 = 6 * (allQty - countMiniFamPack) ;
-                                        newOrder.amount - promo2;
+                                        order.amount - promo2;
                                     }
-                                    
-                                    
+                                   
+                                
+                                    console.log("final amount : ", order.amount);
+                                   
+                                                                                                    
                                 }else{
                                     return res.status(500).send({message : "le produit n'existe pas ! "})
                                 }
@@ -97,7 +113,10 @@ module.exports.invoice = async (req, res) =>{
 
                             
                         );
+                        
                     }
+                
+                   
                 }
             }
         );
@@ -107,5 +126,5 @@ module.exports.invoice = async (req, res) =>{
         res.status(400).send(err);
     }
 
-    console.log("you : ", currentOrderId);
+    
 };

@@ -16,7 +16,7 @@ router.post("/orderPdt", auth.requireAuth , orderController.ord);
 
 // get order
 router.get("/", auth.requireAuth , auth.checkUser, orderController.getAllOrders);
-router.get("/find/:id", auth.requireAuth , auth.checkUser, orderController.editOrder);
+router.get("/find/:id", auth.requireAuth , auth.checkUser, orderController.getOrderId);
 
 
 // update and delete
@@ -26,7 +26,7 @@ router.patch("/mini/:id", auth.requireAuth ,orderController.miniProduct);
 router.delete("/:id", auth.requireAuth , orderController.deleteOrder);
 
 // create discount
-router.post("/discount/:id", invoiceController.invoice);
+router.post("/discount/:id", auth.requireAuth, invoiceController.invoice);
 
 
 

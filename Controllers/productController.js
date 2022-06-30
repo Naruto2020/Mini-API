@@ -55,10 +55,10 @@ module.exports.getProdutId =  (req, res)=>{
     }else{
 
         // verrification de la validité de l'ID
-        if(!ObjetId.isValid(req.params.productId))
-            return res.status(400).send(`Id incorrecte ${req.params.productId}`);
+        if(!ObjetId.isValid(req.params.id))
+            return res.status(400).send(`Id incorrecte ${req.params.id}`);
         
-        Order.findById(req.params.productId, (err, docs)=>{
+        Product.findById(req.params.id, (err, docs)=>{
             if(!err){
                 return res.send(docs);
             }else{
@@ -73,62 +73,74 @@ module.exports.getProdutId =  (req, res)=>{
 };
 
 
-// update product 
+// update product just for admin
 
 module.exports.editProduct = async (req, res) =>{
-    
-    // verrification de la validité de l'ID
-    if(!ObjetId.isValid(req.params.productId))
-        return res.status(400).send(`Id incorrecte ${req.params.productId}`);
 
-    let newOrder =  { 
-        title : req.body.title, 
-        desc : req.body.desc,
-        price : req.body.price,
+    if(res.locals.user.niveau === "user"){
+        res.status(401).json({error: 'Invalid request! user dont have all rigths'});
+    }else{
+        // verrification de la validité de l'ID
+        if(!ObjetId.isValid(req.params.id))
+            return res.status(400).send(`Id incorrecte ${req.params.id}`);
+    
+        let newProduct =  { 
+            title : req.body.title, 
+            desc : req.body.desc,
+            price : req.body.price,
+            
+        };
         
-    };
-    
-    try{
-        Order.findByIdAndUpdate(
-            req.params.productId,
-            {$set : newOrder},
-            {new:true, upsert: true, setDefaultsOnInsert: true},
-            (err, docs) =>{
-                if(!err){
-                    
-                    return res.send(docs);
-                }else{
-                    return res.status(500).send({message: "erreur lors de la mise a jour produit"});
+        try{
+            Product.findByIdAndUpdate(
+                req.params.id,
+                {$set : newProduct},
+                {new:true, upsert: true, setDefaultsOnInsert: true},
+                (err, docs) =>{
+                    if(!err){
+                        
+                        return res.send(docs);
+                    }else{
+                        return res.status(500).send({message: "erreur lors de la mise a jour produit"});
+                    }
                 }
-            }
-        );  
+            );  
+    
+        }catch(err){
+            res.status(400).send(err);
+        }
 
-    }catch(err){
-        res.status(400).send(err);
     }
+    
 
     
 };
 
 // delete order 
 module.exports.deleteProduct = async(req, res) =>{
-    
-    if (!ObjetId.isValid(req.params.productId))
-        return res.status(400).send(`id incorrecte ${req.params.productId}`);
-    try{
-        Order.findByIdAndDelete(
-            req.params.productId,
-            (err, docs) =>{
-                if(!err){
-                    return res.send(docs);
-                }else{
-                    return res.status(500).send({message : "erreur lors de la suppression du produit"})
+
+    if(res.locals.user.niveau === "user"){
+        res.status(401).json({error: 'Invalid request! user dont have all rigths'});
+    }else{
+        if (!ObjetId.isValid(req.params.id))
+            return res.status(400).send(`id incorrecte ${req.params.id}`);
+        try{
+            Product.findByIdAndDelete(
+                req.params.id,
+                (err, docs) =>{
+                    if(!err){
+                        return res.send(docs);
+                    }else{
+                        return res.status(500).send({message : "erreur lors de la suppression du produit"})
+                    }
                 }
-            }
-        );
-    } catch(err){
-        res.status(400).send(err);
-    }    
+            );
+        } catch(err){
+            res.status(400).send(err);
+        }    
+
+    }
+    
 
     
 };

@@ -16,8 +16,25 @@ const OrderSchema = new Schema({
       },
     ],
     amount: { type: Number, required: true },
-    address: { type: Object, required: true },
-    status: { type: String, default: "pending" },
+
+    address : {type : Object, required : true},
+    
+    /*address: {
+      rue : {
+        type : String,
+      },
+      codePostale : {
+        type:String,
+      },
+      ville : {
+        type : String,
+      },
+      pays : {
+        type: String
+      }
+    },*/
+
+    status: { type: String, default: "en cours" },
     
 
     serialNum : {

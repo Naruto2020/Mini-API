@@ -55,8 +55,8 @@ router.get("/find/:id", auth.requireAuth , auth.checkUser, productController.get
 
 
 // update and delete
-router.put("/:id", auth.requireAuth ,productController.editProduct);
-router.delete("/:id", auth.requireAuth , productController.deleteProduct);
+router.put("/:id", auth.requireAuth, auth.checkUser ,productController.editProduct);
+router.delete("/:id", auth.requireAuth, auth.checkUser , productController.deleteProduct);
 
 
 // upload image
