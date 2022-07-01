@@ -10,7 +10,7 @@ const DiscountSchema = new Schema({
     isMoreThanfifty: { type: Boolean, default: true, required: true },
  
   
-    promo: { type: Number, required: true },
+    promo: { type: Number, required: true,  default:0 },
 
     
 }, {timestamps : true});

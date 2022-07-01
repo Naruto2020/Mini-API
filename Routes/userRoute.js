@@ -7,6 +7,8 @@ const authController = require("../Controllers/authController");
 const userController = require("../Controllers/userController");
 const uploadController = require("../Controllers/uploadController");
 const orderController = require("../Controllers/orderController");
+const nodemailController = require("../Controllers/nodeMailController");
+const contactmailController = require("../Controllers/contactMailController");
 const auth = require("../Middleware/authMiddleware");
 
 
@@ -53,6 +55,17 @@ router.post("/login", authController.signIn);
 router.get("/logout", authController.logout);
 
 
+
+// send confirmation email 
+router.post("/notifications", nodemailController.sendEmail);
+// send contact email 
+router.post("/contact", contactmailController.orderEmail);
+// requête pour mot de passe oublier
+router.post("/forgotPassword", nodemailController.forgotPwd);
+// recupérer la clef token 
+router.get("/reset/:token", nodemailController.currentToken);
+// reinitialiser le mdp
+router.post("/reset/:token", nodemailController.resetPwd);
 
 
 //diqplay user 
