@@ -48,7 +48,7 @@ module.exports.requireAuth = (req, res, next) => {
                 console.log(err);
             }else{
                 console.log("current user.id : ",decodedToken.id);
-                res.status(200).json({decodedToken: decodedToken.id})
+                //res.status(200).json({decodedToken: decodedToken.id})
                 next();
             }
         });

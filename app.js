@@ -2,8 +2,10 @@
 const express = require("express");
 const path = require('path');
 const userRoutes = require("./Routes/userRoute");
-//const orderRoutes = require("./Routes/orderRoute");
-const Auth0 = require("./middleware/authMiddleware");
+const productRoutes = require("./Routes/productRoute");
+const orderRoutes = require("./Routes/orderRoute");
+const carteRoutes = require("./Routes/carteRoute");
+const Auth0 = require("./Middleware/authMiddleware");
 
 
 const cors = require("cors");
@@ -34,7 +36,7 @@ app.use(cors(corsOptions));
 // gestions des dossiers 
 
 app.use("/uploads", express.static('client/uploads/profiles'));
-app.use("/uploads", express.static('client/uploads/posts'));
+app.use("/uploads", express.static('client/uploads/products'));
 
 app.use(cookieParser());
 app.use(bodyParser.json());
@@ -49,7 +51,9 @@ app.get("/jwtid", Auth0.checkUser, (req, res) =>{ // on récuppère les infos de
 
 // routes 
 app.use("/api/user", userRoutes);
-//app.use("/api/order", postRoute);
+app.use("/api/product", productRoutes);
+app.use("/api/order", orderRoutes);
+app.use("/api/cart", carteRoutes);
 
 
 
