@@ -52,7 +52,7 @@ describe("Post /user/notification", ()=>{
         .send({
             lastName : "evra-Unit-Test",
             firstName : "patrice",
-            email: "guyfredy@gmail.com",
+            email: "ghpower409@gmail.com",
             password : "patrice2022",
             adress: "place des lices",
             niveau : "user"
