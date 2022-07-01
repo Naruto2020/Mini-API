@@ -5,7 +5,7 @@ services:  # definir les services/container à exécuter
   server: #2eme service
    
     # build: workshop-server # spécifie le repertoire du backend
-    image: ksteve2021/mini-api:v1.0 #image à partir de laquelle on construit le container
+    image: ksteve2021/mini-api:v1.1 #image à partir de laquelle on construit le container
 
     env_file: Config/.env
     
